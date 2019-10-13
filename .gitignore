@@ -1,0 +1,10 @@
+
+# Compiler outputs
+*.o
+
+# Binaries
+hash
+a.out
+
+# Editor Files
+.vscode
