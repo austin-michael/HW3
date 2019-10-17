@@ -1,20 +1,24 @@
 #include <iostream>
 #include <bitset>
+#include <cstring>
 #include "hash.h"
+#include "base64.cpp"
 
-uint64_t hash(std::string input_text) {
+int NUM_BLOCKS = 4;
+
+std::vector<std::uint64_t> hash(std::string input_text) {
     // Initial values
-    uint64_t A = 539958729876229229;
-    uint64_t B = 881213617895827187;
-    uint64_t C = 1619298787036835669;
-    uint64_t D = 4571622384984713413;
+    std::uint64_t A = 539958729876229229;
+    std::uint64_t B = 881213617895827187;
+    std::uint64_t C = 1619298787036835669;
+    std::uint64_t D = 4571622384984713413;
     auto block_vec = extract_words(input_text);
 
-    std::vector<uint64_t> blocks;
+    std::vector<std::uint64_t> blocks;
 
     if (block_vec.size() % 4 != 0) {
         for (int i = 0; i < (block_vec.size() % 4); i++) {
-            block_vec.push_back((uint64_t) block_vec.size());
+            block_vec.push_back((std::uint64_t) block_vec.size());
         }
     }
 
@@ -32,13 +36,13 @@ uint64_t hash(std::string input_text) {
         std::cout << " " << i << " ";
     }
     std::cout << std::endl;
-    return blocks[0];
+    return blocks;
 };
 
-std::vector<std::uint64_t> operation(uint64_t A, uint64_t B, uint64_t C, uint64_t D, uint64_t M_i) {
+std::vector<std::uint64_t> operation(std::uint64_t A, std::uint64_t B, std::uint64_t C, std::uint64_t D, std::uint64_t M_i) {
     std::vector<std::uint64_t> return_vec;
 
-    uint64_t K = ((2926415965689092963) + ((A & ~B) ^ (C & D))) + ~A;
+    std::uint64_t K = ((2926415965689092963) + ((A & ~B) ^ (C & D))) + ~A;
 
     A = A + M_i;
 
@@ -48,15 +52,15 @@ std::vector<std::uint64_t> operation(uint64_t A, uint64_t B, uint64_t C, uint64_
 
     A = rand_f(A, B, C);
     A = (A >> (64 - 23)) | (A << 23); // Barrel shift right 23 bits.
-    uint64_t new_D = C;
+    std::uint64_t new_D = C;
 
     B = f_2(A, B, ((K ^ ~A) + A));
 
     D = D + B;
 
-    uint64_t new_A = D;
-    uint64_t new_B = A;
-    uint64_t new_C = B;
+    std::uint64_t new_A = D;
+    std::uint64_t new_B = A;
+    std::uint64_t new_C = B;
 
     return_vec.push_back(new_A);
     return_vec.push_back(new_B);
@@ -116,8 +120,17 @@ std::uint64_t rand_f(uint64_t A, uint64_t B, uint64_t C) {
     }
 }
 
-int bit_diff(uint64_t A, uint64_t B) {
+int bit_diff(std::uint64_t A, std::uint64_t B) {
     std::bitset<64> different = (A ^ B);
 
     return different.count();
 };
+
+std::string get_base64_string(std::vector<std::uint64_t> blocks) {
+    std::string digest = "";
+    unsigned char value[NUM_BLOCKS * sizeof(blocks)];
+    std::uint64_t block_arr[4];
+    std::copy(blocks.begin(), blocks.end(), block_arr);
+    std::memcpy(&value[0], &block_arr[0], NUM_BLOCKS * sizeof( blocks[0] ));
+    return base64_encode(value, sizeof(value));
+}

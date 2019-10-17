@@ -4,7 +4,6 @@
 #include <cstring>
 
 #include "hash.h"
-#include "base64.cpp"
 
 int main(int argc, char* argv[]) {
     std::vector <std::string> args;
@@ -35,15 +34,15 @@ int main(int argc, char* argv[]) {
     std::cout << "INPUT: " + input_text << std::endl;
     auto b = hash(input_text);
 
+    std::cout << get_base64_string(a) << std::endl;
+    std::cout << get_base64_string(b) << std::endl;
 
-    unsigned char value[sizeof(a)];
-    std::memcpy(value,&a,sizeof(a));
-    std::cout << base64_encode(value, sizeof(value)) << std::endl;
+    int differences = 0;
+    for (int i = 0; i < a.size(); i++) {
+        differences += bit_diff(a[i], b[i]);
+    }
 
-    std::memcpy(value,&b,sizeof(b));
-    std::cout << base64_encode(value, sizeof(value)) << std::endl;
-
-    std::cout << "bit_diff = " << bit_diff(a, b) << std::endl;
+    std::cout << "bit_diff = " << differences << std::endl;
 
     return 0; // Return 0 if everything works correctly
 }
