@@ -15,7 +15,7 @@ std::vector<std::uint64_t> extract_words(std::string input) {
     std::uint64_t word = 0;
     int shifts = 0;
     for (std::uint8_t c : input) {
-        word = (word << 8) | c;
+        word = (word << 8) | c; // Bit shift left existing characters by 8 (shift one character) and bitwise or (|) with the next character.
         if (shifts % 8 == 7) {
             words.push_back(word);
             word = 0;
@@ -23,11 +23,13 @@ std::vector<std::uint64_t> extract_words(std::string input) {
         shifts++;
     }
     // Push back zeros to pad out the end of the last block of the data.
-    while (shifts % 8 != 0) {
-        std::uint8_t zero = 0;
-        word = (word << 8) | zero;
-        shifts++;
+    if (shifts % 8 != 0) {
+        while (shifts % 8 != 0) {
+            std::uint8_t zero = 0;
+            word = (word << 8) | zero;
+            shifts++;
+        }
+        words.push_back(word);
     }
-    words.push_back(word);
     return words;
 };
