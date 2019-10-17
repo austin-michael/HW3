@@ -18,17 +18,14 @@ uint64_t hash(std::string input_text) {
         }
     }
 
-    for (int i = 0; i < 80; i++) {
+    for (int i = 0; i < 80 + block_vec.size(); i++) {
         auto iter = i % block_vec.size();
-        blocks = operation(A, B, C, D, block_vec[i]);
-        // for (auto i : blocks) {
-        //     std::cout << " " << i << " ";
-        // }
+        blocks = operation(A, B, C, D, block_vec[iter]);
+
         A = blocks[0];
         B = blocks[1];
         C = blocks[2];
         D = blocks[3];
-        // std::cout << std::endl;
     }
 
     for (auto i : blocks) {
@@ -44,10 +41,9 @@ std::vector<std::uint64_t> operation(uint64_t A, uint64_t B, uint64_t C, uint64_
     uint64_t K = ((2926415965689092963) + ((A & ~B) ^ (C & D))) + ~A;
     // uint64_t K = 7;
 
-    // A = A ^ M_i;
     A = A + M_i;
 
-    // C = C ^ D;
+    C = C + D;
 
     B = f(A, B, C);
 
@@ -104,12 +100,6 @@ std::uint64_t f_2(uint64_t A, uint64_t B, uint64_t K) {
     return (A & B) ^ (~B & K);
 };
 
-int bit_diff(uint64_t A, uint64_t B) {
-    std::bitset<64> different = (A ^ B);
-
-    return different.count();
-};
-
 std::uint64_t rand_f(uint64_t A, uint64_t B, uint64_t C) {
     switch (((A ^ ~B) & (C ^ B)) % 4) {
         case 0:
@@ -122,3 +112,9 @@ std::uint64_t rand_f(uint64_t A, uint64_t B, uint64_t C) {
             return (C >> 6) ^ (C >> 11) ^ (C >> 25);
     }
 }
+
+int bit_diff(uint64_t A, uint64_t B) {
+    std::bitset<64> different = (A ^ B);
+
+    return different.count();
+};
