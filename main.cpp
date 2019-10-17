@@ -24,7 +24,10 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-    std::cout << hash(input_text) << std::endl;
+    auto a = hash(input_text + "a");
+    auto b = hash(input_text + "b");
+
+	std::cout << "bit_diff = " << bit_diff(a, b) << std::endl;
 
     return 0; // Return 0 if everything works correctly
 }

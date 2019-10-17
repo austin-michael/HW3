@@ -1,7 +1,8 @@
 #include <iostream>
+#include <bitset>
 #include "hash.h"
 
-std::string hash(std::string input_text) {
+uint64_t hash(std::string input_text) {
     auto block_vec = extract_words(input_text);
 
     if (block_vec.size() % 4 != 0) {
@@ -42,7 +43,8 @@ std::string hash(std::string input_text) {
     for (auto i : blocks) {
         std::cout << " " << i << " ";
     }
-    return "";
+    std::cout << std::endl;
+    return blocks[2];
 };
 
 std::vector<std::uint64_t> operation(uint64_t A, uint64_t B, uint64_t C, uint64_t D, uint64_t M_i) {
@@ -107,4 +109,10 @@ std::uint64_t f(uint64_t A, uint64_t B, uint64_t C) {
 
 std::uint64_t f_2(uint64_t A, uint64_t B, uint64_t K) {
     return (A & B) ^ (~B & K);
+};
+
+int bit_diff(uint64_t A, uint64_t B) {
+    std::bitset<64> different = (A ^ B);
+
+    return different.count();
 };
