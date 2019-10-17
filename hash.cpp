@@ -80,6 +80,10 @@ std::vector<std::uint64_t> extract_words(std::string input) {
         }
         shifts++;
     }
+    // If we don't have anything (null string) push back a 0
+    if (words.size() < 1) {
+        words.push_back(0);
+    }
     // Push back zeros to pad out the end of the last block of the data.
     if (shifts % 8 != 0) {
         while (shifts % 8 != 0) {

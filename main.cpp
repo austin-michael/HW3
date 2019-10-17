@@ -1,8 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
 
 #include "hash.h"
+#include "base64.cpp"
 
 int main(int argc, char* argv[]) {
     std::vector <std::string> args;
@@ -25,17 +27,18 @@ int main(int argc, char* argv[]) {
 	}
 
 
-	std::cout << "INPUT: a" + input_text << std::endl;
-    auto a = hash("a" + input_text);
+	std::cout << "INPUT: " + input_text << std::endl;
+    auto a = hash(input_text);
 	std::cout << "INPUT: b" + input_text << std::endl;
-    auto b = hash("b" + input_text);
+    auto b = hash("a" + input_text);
 
-	std::cout << "bit_diff = " << bit_diff(a, b) << std::endl;
 
-	std::cout << "INPUT: " + input_text + "a" << std::endl;
-	a = hash(input_text + "a");
-	std::cout << "INPUT: " + input_text + "b" << std::endl;
-    b = hash(input_text + "b");
+	unsigned char value[sizeof(a)];
+	std::memcpy(value,&a,sizeof(a));
+	std::cout << base64_encode(value, sizeof(value)) << std::endl;
+
+	std::memcpy(value,&b,sizeof(b));
+	std::cout << base64_encode(value, sizeof(value)) << std::endl;
 
 	std::cout << "bit_diff = " << bit_diff(a, b) << std::endl;
 
