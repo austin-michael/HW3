@@ -127,10 +127,9 @@ int bit_diff(std::uint64_t A, std::uint64_t B) {
 };
 
 std::string get_base64_string(std::vector<std::uint64_t> blocks) {
-    std::string digest = "";
-    unsigned char value[NUM_BLOCKS * sizeof(blocks)];
-    std::uint64_t block_arr[4];
+    unsigned char value[blocks.size() * sizeof(blocks[0])];
+    std::uint64_t block_arr[blocks.size()];
     std::copy(blocks.begin(), blocks.end(), block_arr);
-    std::memcpy(&value[0], &block_arr[0], NUM_BLOCKS * sizeof( blocks[0] ));
+    std::memcpy(&value[0], &block_arr[0], blocks.size() * sizeof(blocks[0]));
     return base64_encode(value, sizeof(value));
 }
