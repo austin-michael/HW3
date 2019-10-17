@@ -39,7 +39,6 @@ std::vector<std::uint64_t> operation(uint64_t A, uint64_t B, uint64_t C, uint64_
     std::vector<std::uint64_t> return_vec;
 
     uint64_t K = ((2926415965689092963) + ((A & ~B) ^ (C & D))) + ~A;
-    // uint64_t K = 7;
 
     A = A + M_i;
 
