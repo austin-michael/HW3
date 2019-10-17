@@ -3,7 +3,14 @@
 #include "hash.h"
 
 uint64_t hash(std::string input_text) {
+    // Initial values
+    uint64_t A = 539958729876229229;
+    uint64_t B = 881213617895827187;
+    uint64_t C = 1619298787036835669;
+    uint64_t D = 4571622384984713413;
     auto block_vec = extract_words(input_text);
+
+    std::vector<uint64_t> blocks;
 
     if (block_vec.size() % 4 != 0) {
         for (int i = 0; i < (block_vec.size() % 4); i++) {
@@ -11,32 +18,16 @@ uint64_t hash(std::string input_text) {
         }
     }
 
-    for (auto i : block_vec) {
-        std::cout << i << std::endl;
-    }
-
-    // uint64_t A = 0;
-    // uint64_t B = 0;
-    // uint64_t C = 0;
-    // uint64_t D = 0;
-
-    uint64_t A = 539958729876229229;
-    uint64_t B = 881213617895827187;
-    uint64_t C = 1619298787036835669;
-    uint64_t D = 4571622384984713413;
-
-    std::vector<uint64_t> blocks;
-
-    for (int i = 0; i < 32; i+=4) {
+    for (int i = 0; i < 80; i++) {
         auto iter = i % block_vec.size();
         blocks = operation(A, B, C, D, block_vec[i]);
         // for (auto i : blocks) {
         //     std::cout << " " << i << " ";
         // }
-        A = blocks[iter];
-        B = blocks[iter + 1];
-        C = blocks[iter + 2];
-        D = blocks[iter + 3];
+        A = blocks[0];
+        B = blocks[1];
+        C = blocks[2];
+        D = blocks[3];
         // std::cout << std::endl;
     }
 
@@ -44,27 +35,29 @@ uint64_t hash(std::string input_text) {
         std::cout << " " << i << " ";
     }
     std::cout << std::endl;
-    return blocks[2];
+    return blocks[0];
 };
 
 std::vector<std::uint64_t> operation(uint64_t A, uint64_t B, uint64_t C, uint64_t D, uint64_t M_i) {
     std::vector<std::uint64_t> return_vec;
 
-    //uint64_t K = 2926415965689092963;
-    uint64_t K = 7;
+    uint64_t K = ((2926415965689092963) + ((A & ~B) ^ (C & D))) + ~A;
+    // uint64_t K = 7;
 
-    A = A ^ M_i;
+    // A = A ^ M_i;
+    A = A + M_i;
 
-    C = C ^ D;
+    // C = C ^ D;
 
     B = f(A, B, C);
 
+    A = rand_f(A, B, C);
     A = (A >> (64 - 23)) | (A << 23); // Barrel shift right 23 bits.
     uint64_t new_D = C;
 
-    B = f_2(A, B, ((K & ~A) ^ A));
+    B = f_2(A, B, ((K ^ ~A) + A));
 
-    D = D ^ B;
+    D = D + B;
 
     uint64_t new_A = D;
     uint64_t new_B = A;
@@ -104,7 +97,7 @@ std::vector<std::uint64_t> extract_words(std::string input) {
 };
 
 std::uint64_t f(uint64_t A, uint64_t B, uint64_t C) {
-    return (~A | C) ^ (B & C);
+    return (A & B) ^ (A & C) ^ (B & C);
 };
 
 std::uint64_t f_2(uint64_t A, uint64_t B, uint64_t K) {
@@ -116,3 +109,16 @@ int bit_diff(uint64_t A, uint64_t B) {
 
     return different.count();
 };
+
+std::uint64_t rand_f(uint64_t A, uint64_t B, uint64_t C) {
+    switch (((A ^ ~B) & (C ^ B)) % 4) {
+        case 0:
+            return (A & B) ^ (~A & C);
+        case 1:
+            return (A & B) ^ (A & C) ^ (B & C);
+        case 2:
+            return (A >> 2) ^ (A >> 13) ^ (A >> 22);
+        case 3:
+            return (C >> 6) ^ (C >> 11) ^ (C >> 25);
+    }
+}

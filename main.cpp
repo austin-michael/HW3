@@ -24,8 +24,18 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-    auto a = hash(input_text + "a");
-    auto b = hash(input_text + "b");
+
+	std::cout << "INPUT: a" + input_text << std::endl;
+    auto a = hash("a" + input_text);
+	std::cout << "INPUT: b" + input_text << std::endl;
+    auto b = hash("b" + input_text);
+
+	std::cout << "bit_diff = " << bit_diff(a, b) << std::endl;
+
+	std::cout << "INPUT: " + input_text + "a" << std::endl;
+	a = hash(input_text + "a");
+	std::cout << "INPUT: " + input_text + "b" << std::endl;
+    b = hash(input_text + "b");
 
 	std::cout << "bit_diff = " << bit_diff(a, b) << std::endl;
 
