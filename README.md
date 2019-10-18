@@ -35,7 +35,7 @@ jJxVz5aTV8v73bFv98f9I/nNOWXXxfkDSHw3rFmdMb8=
 bit_diff = 131
 ```
 
-## Avalanch effect (related to Preimage Resistance)
+## Avalanche effect (related to Preimage Resistance)
 
 Any small change in the input changes the input so much that they don't appear to be related. 
 
@@ -69,7 +69,7 @@ bit_diff = 131
 
 ```
 
-It can be seen from the outputs that every time the input is changed there is an approximate 50% change in the output bits. By definition, this function acheives avalanche effect.
+It can be seen from the outputs that every time the input is changed there is an approximate 50% change in the output bits. By definition, this function achieves avalanche effect.
 
 ## Diagram
 
@@ -103,6 +103,14 @@ Depending on the result of this the function will be one of the following functi
 - F(A, B, C) = (A & B) ^ (A & C) ^ (B & C)
 - F(A) = (A >> 2) ^ (A >> 13) ^ (A >> 22)
 - F(C) = (C >> 6) ^ (C >> 11) ^ (C >> 25)
+
+### Rf
+
+The number of bits that we rotate is randomly created as well using the following code.
+
+```
+A = (A >> (64 - ((A ^ K_i) % 64))) | (A << ((A ^ K_i) % 64)); // Barrel shift right (A ^ K_i) % 64 bits.
+```
 
 ## Initial Values
 
