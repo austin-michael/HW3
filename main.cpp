@@ -57,20 +57,17 @@ int main(int argc, char* argv[]) {
 
     // Just for fun (Find a hash with num_zeros of 0's at the front)
     if (num_zeros) {
-        std::string nonce_hash = 0;
-        std::string next_input = "";
-        std::bitset<256> tmp;
+        std::string nonce_hash = "0";
+        std::string next_input = "asdfasdfasdfasdf";
 
-        while (!n_digits_0(nonce_hash, 4)) {
+        while (!n_digits_0(nonce_hash, num_zeros)) {
             next_input = random_string();
             auto hash_vec = hash(next_input);
-            unsigned char value[hash_vec.size() * sizeof(hash_vec[0])];
-            tmp = (std::bitset<256>)get_raw_hash(hash_vec, value);
-            nonce_hash = tmp.to_string();
+            nonce_hash = get_raw_hash(hash_vec);
         }
 
         std::cout << "nonce :" << next_input << std::endl;
-        std::cout << "hash :" << nonce_hash << std::endl;
+        std::cout << "hash :" << get_base64_string(hash(next_input)) << std::endl;
     }
 
     return 0; // Return 0 if everything works correctly

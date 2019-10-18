@@ -12,4 +12,4 @@ std::string get_base64_string(std::vector<std::uint64_t>);
 int bit_diff(uint64_t, uint64_t);
 std::uint64_t rand_f(uint64_t A, uint64_t B, uint64_t C);
 std::string random_string();
-unsigned char* get_raw_hash(std::vector<std::uint64_t> blocks, unsigned char* value);
+std::string get_raw_hash(std::vector<std::uint64_t> blocks);

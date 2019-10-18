@@ -133,16 +133,22 @@ std::string get_base64_string(std::vector<std::uint64_t> blocks) {
     return base64_encode(value, sizeof(value));
 }
 
-unsigned char* get_raw_hash(std::vector<std::uint64_t> blocks, unsigned char* value) {
+std::string get_raw_hash(std::vector<std::uint64_t> blocks) {
+    unsigned char value[blocks.size() * sizeof(blocks[0])];
     std::uint64_t block_arr[blocks.size()];
     std::copy(blocks.begin(), blocks.end(), block_arr);
     std::memcpy(&value[0], &block_arr[0], blocks.size() * sizeof(blocks[0]));
-    return value;
+    std::bitset<256> bits;
+    for (int i = 0; i <= 3; i++) {
+        bits <<= 64;
+        bits |= block_arr[i];
+    }
+    return bits.to_string();
 }
 
 std::string random_string()
 {
-     std::string str("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+     std::string str(" \'\"!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~");
 
      std::random_device rd;
      std::mt19937 generator(rd());
